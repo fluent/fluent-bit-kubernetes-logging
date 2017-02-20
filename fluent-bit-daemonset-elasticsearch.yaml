@@ -16,7 +16,7 @@ spec:
         kubernetes.io/cluster-service: "true"
     spec:
       containers:
-      - name: fluentd
+      - name: fluent-bit
         image: quay.io/fluent/fluent-bit-kubernetes-daemonset
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
