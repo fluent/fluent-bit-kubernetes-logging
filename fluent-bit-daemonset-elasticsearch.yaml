@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: fluentd
+  name: fluent-bit
   namespace: kube-system
   labels:
     k8s-app: fluent-bit-logging
