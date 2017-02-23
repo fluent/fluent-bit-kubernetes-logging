@@ -7,7 +7,6 @@ ENV FLB_MINOR 11
 ENV FLB_PATCH 0
 ENV FLB_VERSION 0.11.0
 
-
 MAINTAINER Eduardo Silva <eduardo@treasure-data.com>
 LABEL Description="Fluent Bit docker image" Vendor="Fluent Organization" Version="1.1"
 USER root
