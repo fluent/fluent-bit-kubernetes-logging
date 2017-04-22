@@ -15,11 +15,10 @@ This repository contains two Yaml DaemonSet files:
 | Yaml file | Description |
 |-----------|-------------|
 | [fluent-bit-daemonset-elasticsearch](fluent-bit-daemonset-elasticsearch.yaml) | deploys a stable release of Fluent Bit. |
-| [fluent-bit-daemonset-elasticsearch-next](fluent-bit-daemonset-elasticsearch-next.yaml) | deploy the stable branch of Fluent Bit with changes not included yet in the stable release. |
 
-Helping to test means that we will focus on the __-next__ version of the DaemonSet. The __-next__ DaemonSet points to a specific Docker Hub image:
+The current DaemonSet points to this specific Docker Hub image:
 
-[0.11-next](https://hub.docker.com/r/fluent/fluent-bit-kubernetes-daemonset/tags/) fluent/fluent-bit-kubernetes-daemonset:0.11-next
+[0.11](https://hub.docker.com/r/fluent/fluent-bit-kubernetes-daemonset/tags/) fluent/fluent-bit-kubernetes-daemonset:0.11
 
 ### Steps
 
