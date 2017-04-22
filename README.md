@@ -25,10 +25,10 @@ Helping to test means that we will focus on the __-next__ version of the DaemonS
 
 1. Make sure your Elasticsearch backend is running and can be reach through the hostname _elasticsearch-logging_. This value can be changed in the Yaml file
 
-2. Deploy the -next daemonset file from this repository:
+2. Deploy the daemonset file from this repository:
 
 ```bash
-$ kubectl apply -f fluent-bit-daemonset-elasticsearch-next.yaml
+$ kubectl apply -f fluent-bit-daemonset-elasticsearch.yaml
 ```
 
 ## Details
