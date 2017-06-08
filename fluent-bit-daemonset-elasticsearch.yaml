@@ -35,6 +35,9 @@ spec:
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
           readOnly: true
+        - name: minikube
+          mountPath: /mnt/sda1/var/lib/docker/containers
+          readOnly: true
       terminationGracePeriodSeconds: 10
       volumes:
       - name: varlog
@@ -43,3 +46,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: minikube
+        hostPath:
+          path: /mnt/sda1/var/lib/docker/containers
