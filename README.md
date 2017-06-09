@@ -24,6 +24,13 @@ The current DaemonSet points to this specific Docker Hub image:
 
 1. Make sure your Elasticsearch backend is running and can be reach through the hostname _elasticsearch-logging_. This value can be changed in the Yaml file
 
+```
+wget https://github.com/kubernetes/kubernetes/raw/master/cluster/addons/fluentd-elasticsearch/es-controller.yaml
+wget https://github.com/kubernetes/kubernetes/raw/master/cluster/addons/fluentd-elasticsearch/es-service.yaml
+kubectl create -f es-controller.yaml
+kubectl create -f es-service.yaml
+```
+
 2. Deploy the daemonset file from this repository:
 
 ```bash
