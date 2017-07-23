@@ -1,4 +1,4 @@
-FROM fluent/fluent-bit:0.11.14
+FROM fluent/fluent-bit:0.11.15
 MAINTAINER Eduardo Silva <eduardo@treasure-data.com>
 USER root
 
