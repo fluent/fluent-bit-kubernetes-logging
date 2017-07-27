@@ -12,9 +12,9 @@ spec:
       - -ec
       - >
         cd /usr/local/bin;
-        echo '#!/bin/sh' > logs-cat;
+        echo '#!/bin/bash' > logs-cat;
         chmod +x logs-cat;
-        echo "kafkacat -b kafka-0.broker.kafka.svc.cluster.local:9092 -t fluent-bit -C" >> logs-cat;
+        echo "kafkacat -b kafka-0.broker.kafka.svc.cluster.local:9092 -C -t fluent-bit -o end" >> logs-cat;
 
         echo "Won't cat logs to stdout because it would create an infinite loop of log aggregation.";
         echo "Instead run something like:";
