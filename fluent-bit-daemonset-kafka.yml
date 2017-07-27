@@ -17,16 +17,18 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent
-        # build using eval $(minikube docker-env) && docker build -t fluent docker-image/
-        imagePullPolicy: Never
+        image: fluent/fluent-bit:0.12-dev
         env:
           - name:  KAFKA_REST_HOST
             value: rest.kafka.svc.cluster.local
           - name:  KAFKA_REST_PORT
             value: "80"
           - name:  KAFKA_TOPIC
-            value: logs
+            value: logs-json
+        command:
+          - /fluent-bit/bin/fluent-bit
+          - -c
+          - /fluent-bit/etc/fluent-bit.conf
         resources:
           limits:
             memory: 100Mi
@@ -34,6 +36,8 @@ spec:
             cpu: 100m
             memory: 100Mi
         volumeMounts:
+        - name: config
+          mountPath: /fluent-bit/etc
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -41,6 +45,9 @@ spec:
           readOnly: true
       terminationGracePeriodSeconds: 10
       volumes:
+      - name: config
+        configMap:
+          name: fluent-bit-config-kafka-rest
       - name: varlog
         hostPath:
           path: /var/log
