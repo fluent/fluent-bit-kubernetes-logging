@@ -8,13 +8,13 @@ spec:
   - name: kafkacat
     image: solsson/kafkacat@sha256:1266d140c52cb39bf314b6f22b6d7a01c4c9084781bc779fdfade51214a713a8
     command:
-      - sh
+      - bash
       - -ec
       - >
         cd /usr/local/bin;
         echo '#!/bin/sh' > logs-cat;
         chmod +x logs-cat;
-        echo "kafkacat -b kafka-0.broker.kafka.svc.cluster.local:9092 -t logs -C" >> logs-cat;
+        echo "kafkacat -b kafka-0.broker.kafka.svc.cluster.local:9092 -t fluent-bit -C" >> logs-cat;
 
         echo "Won't cat logs to stdout because it would create an infinite loop of log aggregation.";
         echo "Instead run something like:";

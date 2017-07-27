@@ -24,7 +24,7 @@ spec:
           - name:  KAFKA_REST_PORT
             value: "80"
           - name:  KAFKA_TOPIC
-            value: logs-json
+            value: fluent-bit
         command:
           - /fluent-bit/bin/fluent-bit
           - -c
