@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: fluentd-bit-logging
-  namespace: monitoring
+  namespace: kube-system
   labels:
     run: fluentd-bit-logging
 
