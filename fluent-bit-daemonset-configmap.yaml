@@ -23,6 +23,7 @@ data:
         Name           kubernetes
         Match          kubernetes.*
         Kube_URL       https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}
+        tls.verify      False
         Merge_JSON_Log On
 
     [OUTPUT]
