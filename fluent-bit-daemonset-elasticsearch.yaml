@@ -8,16 +8,24 @@ metadata:
     version: v1
     kubernetes.io/cluster-service: "true"
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
         k8s-app: fluent-bit-logging
         version: v1
         kubernetes.io/cluster-service: "true"
+      annotations:
+        # This annotation ensures that fluentd does not get evicted if the node
+        # supports critical pod annotation based priority scheme.
+        # Note that this does not guarantee admission on the nodes (#40573).
+        scheduler.alpha.kubernetes.io/critical-pod: ''
     spec:
+      serviceAccountName: fluent-bit-logging
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit-kubernetes-daemonset:0.11
+        image: globegitter/fluent-bit-kubernetes-daemonset:0.12.1
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
             value: "elasticsearch-logging"
@@ -36,6 +44,12 @@ spec:
           mountPath: /var/lib/docker/containers
           readOnly: true
       terminationGracePeriodSeconds: 10
+      # Do not schedule on master nodes
+      tolerations:
+        - key: "kubernetes.io/role"
+          operator: "Equal"
+          value: "master"
+          effect: "NoSchedule"
       volumes:
       - name: varlog
         hostPath:
