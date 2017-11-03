@@ -1,35 +1,26 @@
-# Help to Test!
+# Kubernetes Logging with Fluent Bit
 
-[Fluent Bit](http://fluentbit.io) v0.11 was just released at the end of March 2017 and it comes with support for Kubernetes logging needs: it can consume logs and enrich them with proper Kubernetes metadata, retrieved from the API server of course.
+[Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log Processor__ that comes with full support for Kubernetes:
 
-Our goal is to make logging cheaper in terms of memory consumption. In order to accomplish this we need to deal with different factors, not only processing incoming logs but also _formatting_ the data for our backends like Elasticsearch, which can be a little expensive as it requires a JSON representation.
+- Read Kubernetes/Docker log files from the file system or through Systemd Journal
+- Enrich logs with Kubernetes metadata
+- Deliver logs to third party storage services like Elasticsearch, InfluxDB, HTTP, etc.
 
-> Note: Fluent Bit uses a binary representation for logs, converting this to JSON requires enough memory for the process.
+This repository contains a set of Yaml files to deploy Fluent Bit which consider namespace, RBAC, Service Account, etc.
 
 ## Getting started
 
-Fluent Bit must be deployed as a DaemonSet, on that way it will be available on every node of your Kubernetes cluster.
+[Fluent Bit](http://fluentbit.io) must be deployed as a DaemonSet, so on that way it will be available on every node of your Kubernetes cluster. To get started:
 
-This repository contains two Yaml DaemonSet files:
+__FIXME__
 
-| Yaml file | Description |
-|-----------|-------------|
-| [fluent-bit-daemonset-elasticsearch](fluent-bit-daemonset-elasticsearch.yaml) | deploys a stable release of Fluent Bit. |
-
-The current DaemonSet points to this specific Docker Hub image:
-
-[0.11](https://hub.docker.com/r/fluent/fluent-bit-kubernetes-daemonset/tags/) fluent/fluent-bit-kubernetes-daemonset:0.11
-
-### Steps
-
-1. Make sure your Elasticsearch backend is running and can be reach through the hostname _elasticsearch-logging_. This value can be changed in the Yaml file
-
-2. Deploy the daemonset file from this repository:
-
-```bash
-$ kubectl apply -f fluent-bit-daemonset-elasticsearch.yaml
 ```
+$ kubectl create namespace logging
+$ kubectl create -f ./fluent-bit-service-account.yaml
+$ kubectl create -f ./fluent-bit-role.yaml
+$ kubectl create -f ./fluent-bit-role-binding.yaml
 
+```
 ## Details
 
 The default configuration of Fluent Bit makes sure of the following:
