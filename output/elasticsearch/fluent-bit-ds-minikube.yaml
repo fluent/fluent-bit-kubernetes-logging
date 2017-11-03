@@ -20,7 +20,7 @@ spec:
         image: fluent/fluent-bit:0.12.7
         env:
         - name: FLUENT_ELASTICSEARCH_HOST
-          value: "10.0.2.2"
+          value: "elasticsearch"
         - name: FLUENT_ELASTICSEARCH_PORT
           value: "9200"
         volumeMounts:

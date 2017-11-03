@@ -38,7 +38,7 @@ $ kubectl create -f https://github.com/fluent/fluent-bit-kubernetes-logging/blob
 If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
 
 ```
-$ kubectl create -f https://github.com/fluent/fluent-bit-kubernetes-logging/blob/master/output/elasticsearch/fluent-bit-ds.yaml
+$ kubectl create -f https://github.com/fluent/fluent-bit-kubernetes-logging/blob/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
 ```
 
 ## Details
