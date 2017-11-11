@@ -17,12 +17,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:0.12.7
-        env:
-        - name: FLUENT_ELASTICSEARCH_HOST
-          value: "elasticsearch"
-        - name: FLUENT_ELASTICSEARCH_PORT
-          value: "9200"
+        image: fluent/fluent-bit-kafka-dev@sha256:35fbfb4238f6f2d384fe303d6b5c153c521a237414d423c1f8074a819b4b1170
         volumeMounts:
         - name: varlog
           mountPath: /var/log
