@@ -17,7 +17,7 @@ data:
 
     @INCLUDE input-kubernetes.conf
     @INCLUDE filter-kubernetes.conf
-    @INCLUDE output-elasticsearch.conf
+    @INCLUDE output-kafka.conf
 
   input-kubernetes.conf: |
     [INPUT]
@@ -37,14 +37,13 @@ data:
         Kube_URL       https://kubernetes.default.svc:443
         Merge_JSON_Log On
 
-  output-elasticsearch.conf: |
+  output-kafka.conf: |
     [OUTPUT]
-        Name            es
+        Name           kafka
         Match           *
-        Host            ${FLUENT_ELASTICSEARCH_HOST}
-        Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Format On
-        Retry_Limit     False
+        Brokers        kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        Topic          ops-kube-logs-fluentbit-001
+        Timestamp_Key  @timestamp
 
   parsers.conf: |
     [PARSER]
