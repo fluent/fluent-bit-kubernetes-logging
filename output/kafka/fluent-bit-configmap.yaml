@@ -42,7 +42,7 @@ data:
         Name           kafka
         Match           *
         Brokers        kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
-        Topics         ops-kube-logs-fluentbit-001
+        Topics         ops.kube-logs-fluentbit.stream.json.001
         Timestamp_Key  @timestamp
 
   parsers.conf: |
