@@ -40,8 +40,8 @@ data:
   output-kafka.conf: |
     [OUTPUT]
         Name           kafka
-        Match           *
-        Brokers        kafka-0.broker.kafka.svc.cluster.local:9092,kafka-1.broker.kafka.svc.cluster.local:9092,kafka-2.broker.kafka.svc.cluster.local:9092
+        Match          *
+        Brokers        bootstrap.kafka:9092
         Topics         ops.kube-logs-fluentbit.stream.json.001
         Timestamp_Key  @timestamp
 
