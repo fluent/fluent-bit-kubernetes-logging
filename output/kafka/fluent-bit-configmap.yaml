@@ -44,6 +44,7 @@ data:
         Brokers        bootstrap.kafka:9092
         Topics         ops.kube-logs-fluentbit.stream.json.001
         Timestamp_Key  @timestamp
+        Retry_Limit    false
 
   parsers.conf: |
     [PARSER]
