@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit-kafka-dev:0.4@sha256:97621767bbe271cdda04c25702f57dc5e256ccddcf89386b1d6f539af74c46e6
+        image: fluent/fluent-bit-kafka-dev:0.5@sha256:8f651e4e03239bcd758bffdcc7d16eba38d5e96876757e6ccff29b4eff2e3241
         volumeMounts:
         - name: varlog
           mountPath: /var/log
