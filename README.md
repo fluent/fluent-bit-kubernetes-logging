@@ -1,4 +1,6 @@
-# Kubernetes Logging with Fluent Bit
+# Kubernetes Logging with Fluent Bit (0.13-dev)
+
+__DISCLAIMER__: The following 0.13-dev branch aims to be used for testing and development purposes only.
 
 [Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log Processor__ that comes with full support for Kubernetes:
 
