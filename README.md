@@ -10,6 +10,19 @@ __DISCLAIMER__: The following 0.13-dev branch aims to be used for testing and de
 
 This repository contains a set of Yaml files to deploy Fluent Bit which consider namespace, RBAC, Service Account, etc.
 
+## What's new in 0.13-dev
+
+We need your help testing the following new features available:
+
+- Native Kafka output plugin
+- HTTP endpoints (TCP port 2020):
+  - /
+  - /api/v1/metrics
+  - /api/v1/metrics/prometheus
+  - /api/v1/plugins
+- Filter Kubernetes
+  - Pod's can suggest a parser through annotations (e.g: logging.parser = apache)
+
 ## Getting started
 
 [Fluent Bit](http://fluentbit.io) must be deployed as a DaemonSet, so on that way it will be available on every node of your Kubernetes cluster. To get started run the following commands to create the namespace, service account and role setup:
@@ -24,15 +37,16 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/0.13-dev/output/elasticsearch/fluent-bit-configmap.yaml
 ```
+
 
 #### Fluent Bit to Elasticsearch
 
 Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes Cluster:
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/0.13-dev/output/elasticsearch/fluent-bit-ds.yaml
 ```
 
 #### Fluent Bit to Elasticsearch on Minikube
@@ -40,7 +54,7 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/0.13-dev/output/elasticsearch/fluent-bit-ds-minikube.yaml
 ```
 
 ## Details
