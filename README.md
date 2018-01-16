@@ -42,14 +42,13 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
 ```
 
+#### Fluent Bit to Elasticsearch
+
 The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
 
 ```
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/0.13-dev/output/elasticsearch/fluent-bit-configmap.yaml
 ```
-
-
-#### Fluent Bit to Elasticsearch
 
 Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes Cluster:
 
@@ -63,6 +62,34 @@ If you are using Minikube for testing purposes, use the following alternative Da
 
 ```
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/0.13-dev/output/elasticsearch/fluent-bit-ds-minikube.yaml
+```
+
+#### Fluent Bit to Kafka
+
+Kubectl reads files and URLs alike so you can apply the following based on a local clone:
+```bash
+BASE="."
+```
+
+or from a URL:
+```bash
+BASE="https://raw.githubusercontent.com/Yolean/fluent-bit-kubernetes-kafka/out-kafka"
+```
+
+Create namespace and RBAC resources according to Getting started above.
+Then configure your Kafka bootstrap servers string in `$BASE/output/kafka/fluent-bit-configmap.yaml`.
+The default is for [Yolean/kubernetes-kafka](https://github.com/Yolean/kubernetes-kafka).
+
+```
+kubectl apply -f $BASE/output/kafka/fluent-bit-configmap.yaml
+```
+
+Then depending on Kubernetes setup (the hostPath for logs differ slightly):
+
+```
+kubectl apply -f $BASE/output/kafka/fluent-bit-ds-minikube.yaml
+# or
+kubectl apply -f $BASE/output/kafka/fluent-bit-ds.yaml
 ```
 
 ## Details
