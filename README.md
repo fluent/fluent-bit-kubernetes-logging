@@ -2,6 +2,7 @@
 
 __DISCLAIMER__: The following 0.13-dev branch aims to be used for testing and development purposes only.
 
+
 [Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log Processor__ that comes with full support for Kubernetes:
 
 - Read Kubernetes/Docker log files from the file system or through Systemd Journal
@@ -9,6 +10,13 @@ __DISCLAIMER__: The following 0.13-dev branch aims to be used for testing and de
 - Deliver logs to third party storage services like Elasticsearch, InfluxDB, HTTP, etc.
 
 This repository contains a set of Yaml files to deploy Fluent Bit which consider namespace, RBAC, Service Account, etc.
+
+## Changelog
+
+The following repository is having continuous updates, specifically in the Docker image that's being used.
+
+- __0.13-dev:0.4, January 16h, 2018__
+  - Initial public release
 
 ## What's new in 0.13-dev
 
