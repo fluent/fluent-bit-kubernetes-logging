@@ -14,10 +14,16 @@ spec:
         k8s-app: fluent-bit-logging
         version: v1
         kubernetes.io/cluster-service: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2020"
+        prometheus.io/path: /api/v1/metrics/prometheus
     spec:
       containers:
       - name: fluent-bit
         image: fluent/fluent-bit-0.13-dev:0.4
+        ports:
+        - containerPort: 2020
         resources:
           requests:
             cpu: 2m

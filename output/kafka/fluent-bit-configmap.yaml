@@ -14,6 +14,9 @@ data:
         Log_Level     info
         Daemon        off
         Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
 
     @INCLUDE input-kubernetes.conf
     @INCLUDE filter-kubernetes.conf
@@ -32,10 +35,11 @@ data:
 
   filter-kubernetes.conf: |
     [FILTER]
-        Name           kubernetes
-        Match          kube.*
-        Kube_URL       https://kubernetes.default.svc:443
-        Merge_JSON_Log On
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Merge_Log           On
+        K8S-Logging.Parser  On
 
   output-kafka.conf: |
     [OUTPUT]

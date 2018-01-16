@@ -39,7 +39,6 @@ data:
         Match               kube.*
         Kube_URL            https://kubernetes.default.svc:443
         Merge_Log           On
-        K8S-Logging.Parser  On
 
   output-elasticsearch.conf: |
     [OUTPUT]
