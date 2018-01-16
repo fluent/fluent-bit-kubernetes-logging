@@ -18,6 +18,13 @@ spec:
       containers:
       - name: fluent-bit
         image: fluent/fluent-bit-0.13-dev:0.4
+        resources:
+          requests:
+            cpu: 2m
+            memory: 5Mi
+          limits:
+            cpu: 10m
+            memory: 10Mi
         volumeMounts:
         - name: varlog
           mountPath: /var/log
