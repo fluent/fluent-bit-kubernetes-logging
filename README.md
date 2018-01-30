@@ -2,7 +2,6 @@
 
 __DISCLAIMER__: The following 0.13-dev branch aims to be used for testing and development purposes only.
 
-
 [Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log Processor__ that comes with full support for Kubernetes:
 
 - Read Kubernetes/Docker log files from the file system or through Systemd Journal
@@ -15,7 +14,20 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
-- __0.13-dev:0.4, January 16h, 2018__
+- __0.13-dev:0.6, January 29th, 2018__
+  - http server: fix crash on Prometheus exporter
+
+- __0.13-dev:0.5, January 29th, 2018__
+  - lib: mbedtls: upgrade from v2.5.1 to 2.6.0.
+  - filter_kubernetes
+    - fix conditional when checking annotations.
+  - in_tail
+    - do not stop processing when NULL bytes are found.
+    - double check file-rotation and fix possible memory leak introduced in previous changes.
+  - out_forward
+    - fix memory leak when talking to (old) Fluentd 0.12 servers.
+
+- __0.13-dev:0.4, January 16th, 2018__
   - Initial public release
 
 ## What's new in 0.13-dev
