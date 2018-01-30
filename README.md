@@ -14,10 +14,13 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.6, January 29th, 2018__
+  - http server: fix crash on Prometheus exporter
+
 - __0.13-dev:0.5, January 29th, 2018__
-  - lib: mbedtls: upgrade from v2.5.1 to 2.6.0
+  - lib: mbedtls: upgrade from v2.5.1 to 2.6.0.
   - filter_kubernetes
-    - fix conditional when checking annotations
+    - fix conditional when checking annotations.
   - in_tail
     - do not stop processing when NULL bytes are found.
     - double check file-rotation and fix possible memory leak introduced in previous changes.
