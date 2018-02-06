@@ -14,6 +14,12 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.7, February 06th, 2018__
+  - core: fix memory spikes associated with tasks on pause/resume handlers.
+  - in_tail: if a parser fails, pack raw text
+  - filter_kubernetes: allow to use a custom pre-defined regex parser to gather metadata from file names (new __regex_parser__ option).
+  - out_kafka: new configuration option rdkafka.x to configure rdkafka internals.
+
 - __0.13-dev:0.6, January 29th, 2018__
   - http server: fix crash on Prometheus exporter
 
