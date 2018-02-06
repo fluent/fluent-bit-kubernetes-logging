@@ -51,6 +51,8 @@ data:
         Retry_Limit    false
         # hides errors "Receive failed: Disconnected" when kafka kills idle connections
         rdkafka.log.connection.close false
+        # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
+        rdkafka.queue.buffering.max.kbytes 10240
 
   parsers.conf: |
     [PARSER]
