@@ -32,7 +32,7 @@ spec:
             memory: 10Mi
           limits:
             cpu: 50m
-            memory: 100Mi
+            memory: 60Mi
         volumeMounts:
         - name: varlog
           mountPath: /var/log
