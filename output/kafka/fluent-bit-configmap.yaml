@@ -53,6 +53,8 @@ data:
         rdkafka.log.connection.close false
         # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
         rdkafka.queue.buffering.max.kbytes 10240
+        # for logs you'll probably want this ot be 0 or 1, not more
+        rdkafka.request.required.acks 1
 
   parsers.conf: |
     [PARSER]
