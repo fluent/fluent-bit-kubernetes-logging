@@ -26,6 +26,10 @@ spec:
         image: fluent/fluent-bit-0.13-dev:0.7
         ports:
         - containerPort: 2020
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 2020
         resources:
           requests:
             cpu: 2m
