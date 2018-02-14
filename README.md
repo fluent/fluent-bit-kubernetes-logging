@@ -14,6 +14,13 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.8, February 14th, 2018__
+  - core: new parser decoder feature (Decode_Field)
+  - in_tail: check if a file is already being monitored
+  - in_tail: new db.sync property
+  - in_systemd: fix stalled reads
+  - filter_record_modifier: support wildcard for Remove_key & Whitelist_key.
+
 - __0.13-dev:0.7, February 06th, 2018__
   - core: fix memory spikes associated with tasks on pause/resume handlers.
   - in_tail: if a parser fails, pack raw text
