@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit-0.13-dev:0.8
+        image: fluent/fluent-bit-0.13-dev:0.9
         ports:
           - containerPort: 2020
         env:
