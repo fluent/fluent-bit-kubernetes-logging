@@ -14,6 +14,9 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.10, March 01th, 2018__
+  - filter_kubernetes: fix support for logs coming from Systemd.
+
 - __0.13-dev:0.9, February 22th, 2018__
   - filter_kubernetes: improve handling of strings, objects, escaped strings, etc.
   - runtime tests: re-do tests for filter_kubernetes.
