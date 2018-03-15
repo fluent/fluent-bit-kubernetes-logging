@@ -14,6 +14,13 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.12, March 05th, 2018__
+  - core: pack: add fast JSON validation
+  - parser_decoder: extended support for 'escaped' mode and 'try_next' action
+
+- __0.13-dev:0.11, March 05th, 2018__
+  - core: pack: fix unnecessary packing on empty JSON tokens.
+
 - __0.13-dev:0.10, March 01th, 2018__
   - filter_kubernetes: fix support for logs coming from Systemd.
 
