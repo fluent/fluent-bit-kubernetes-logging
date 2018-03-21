@@ -37,7 +37,7 @@ data:
     [FILTER]
         Name                kubernetes
         Match               kube.*
-        Kube_URL            https://kubernetes.default.svc:443
+        Kube_URL            https://kubernetes.default.svc.cluster.local:443
         Merge_Log           On
         K8S-Logging.Parser  On
 
@@ -89,6 +89,9 @@ data:
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
         Time_Keep   On
+        # Command      |  Decoder | Field | Optional Action
+        # =============|==================|=================
+        Decode_Field_As   escaped    log
 
     [PARSER]
         Name        syslog
