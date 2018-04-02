@@ -14,6 +14,14 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.14, April 02th, 2018__
+  - out_splunk: new [Splunk output plugin](http://fluentbit.io/documentation/0.13/output/splunk.html) (HEC)
+  - out_influxdb: add support for HTTP Basic Auth
+  - core: parser: support fractional seconds with Unix timestamps
+  - core: http_client: fix handling of HTTP responses without payload (HTTP 204 case)
+  - lib: sqlite: upgrade v3.23
+  - lib: mbedtls: upgrade to v2.8.0
+
 - __0.13-dev:0.13, March 20th, 2018__
   - filter_kubernetes: adapt to data incoming from parser decoders
   - docker parser: use new decoder mode
