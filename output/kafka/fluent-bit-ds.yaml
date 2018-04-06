@@ -23,7 +23,8 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit-0.13-dev:0.14
+        image: fluent/fluent-bit-0.13-dev:0.15
+        imagePullPolicy: Always
         ports:
         - containerPort: 2020
         readinessProbe:
