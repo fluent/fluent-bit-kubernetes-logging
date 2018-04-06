@@ -89,7 +89,7 @@ We need your help testing the following new features available:
   - /api/v1/metrics/prometheus
   - /api/v1/plugins
 - Filter Kubernetes
-  - Pod's can suggest a parser through annotations (e.g: logging.parser = apache)
+  - Pod's can suggest a parser through annotations, e.g: fluentbit.io/parser: apache
 
 ## Getting started
 
