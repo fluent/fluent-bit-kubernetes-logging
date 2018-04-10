@@ -14,6 +14,9 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.16, April 10th, 2018__
+  - lib: monkey: fixes on HTTP server component
+
 - __0.13-dev:0.15, April 06th, 2018__
   - parser decoder: cleanup and exception fixes
   - filter_kubernetes: annotation feature in Pods renamed from 'logging.' to 'fluentbit.io/'
