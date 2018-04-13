@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:0.12.14
+        image: fluent/fluent-bit:0.12.17
         env:
         - name: FLUENT_ELASTICSEARCH_HOST
           value: "elasticsearch"
