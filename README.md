@@ -14,6 +14,16 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 The following repository is having continuous updates, specifically in the Docker image that's being used.
 
+- __0.13-dev:0.18, April 22th, 2018__
+  - config: @INCLUDE now supports glob patterns to include multiple files
+  - parser: json: always validate unpacked data
+  - lib: flb_libco: build with threading support (LIBCO_MP)
+  - lib: jsmn: improve strict mode and do not process invalid maps
+
+- __0.13-dev:0.17, April 20th, 2018__
+  - engine: do not remove task if 'retries' associated still exists
+  - i/o: fix socket validation status and include clear error messages
+
 - __0.13-dev:0.16, April 10th, 2018__
   - lib: monkey: fixes on HTTP server component
 
