@@ -20,7 +20,7 @@ data:
 
     @INCLUDE input-kubernetes.conf
     @INCLUDE filter-kubernetes.conf
-    @INCLUDE output-elasticsearch.conf
+    @INCLUDE output-kafka.conf
 
   input-kubernetes.conf: |
     [INPUT]
@@ -41,14 +41,20 @@ data:
         Merge_Log           On
         K8S-Logging.Parser  On
 
-  output-elasticsearch.conf: |
+  output-kafka.conf: |
     [OUTPUT]
-        Name            es
-        Match           *
-        Host            ${FLUENT_ELASTICSEARCH_HOST}
-        Port            ${FLUENT_ELASTICSEARCH_PORT}
-        Logstash_Format On
-        Retry_Limit     False
+        Name           kafka
+        Match          *
+        Brokers        bootstrap.kafka:9092
+        Topics         ops.kube-logs-fluentbit.stream.json.001
+        Timestamp_Key  @timestamp
+        Retry_Limit    false
+        # hides errors "Receive failed: Disconnected" when kafka kills idle connections
+        rdkafka.log.connection.close false
+        # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
+        rdkafka.queue.buffering.max.kbytes 10240
+        # for logs you'll probably want this ot be 0 or 1, not more
+        rdkafka.request.required.acks 1
 
   parsers.conf: |
     [PARSER]
