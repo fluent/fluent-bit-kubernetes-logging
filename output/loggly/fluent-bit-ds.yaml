@@ -21,8 +21,10 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:0.13.0
-        imagePullPolicy: Always
+        #image: fluent/fluent-bit:0.13.0
+        #image: sunbit/fluent-bit:0.13.0-json-lines
+        image: sunbit/fluent-bit:0.13.0-json-timestamp3
+        imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 2020
         env:

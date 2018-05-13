@@ -11,7 +11,7 @@ data:
   fluent-bit.conf: |
     [SERVICE]
         Flush         1
-        Log_Level     warn
+        Log_Level     info
         Daemon        off
         Parsers_File  parsers.conf
         HTTP_Server   On
@@ -43,16 +43,16 @@ data:
 
   output-loggly.conf: |
     [OUTPUT]
-        Name            http
-        Match           *
-        Host            ${LOGGLY_HOSTNAME}
-        Port            443
-        tls             On
-        #Port            80
-        URI             /bulk/${LOGGLY_TOKEN}/tag/${LOGGLY_TAG}/
-        #URI             /inputs/${LOGGLY_TOKEN}/tag/${LOGGLY_TAG}/
-        Format          json_stream
-        Retry_Limit     False
+        Name             http
+        Match            *
+        Host             ${LOGGLY_HOSTNAME}
+        Port             443
+        Tls              On
+        URI              /bulk/${LOGGLY_TOKEN}/tag/${LOGGLY_TAG}/
+        Format           json_lines
+        Json_Date_Key    timestamp
+        Json_Date_Format iso8601
+        Retry_Limit      False
 
   parsers.conf: |
     [PARSER]
@@ -88,6 +88,13 @@ data:
         Time_Format %d/%b/%Y:%H:%M:%S %z
 
     [PARSER]
+        Name        syslog
+        Format      regex
+        Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
+        Time_Key    time
+        Time_Format %b %d %H:%M:%S
+
+    [PARSER]
         Name        docker
         Format      json
         Time_Key    time
@@ -98,8 +105,9 @@ data:
         Decode_Field_As   escaped    log
 
     [PARSER]
-        Name        syslog
+        Name        java_multiline
         Format      regex
-        Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
-        Time_Key    time
-        Time_Format %b %d %H:%M:%S
+        Regex       ^(?<time_orig>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}[.,]\d{3,})\s+\[(?<thread>[^]]+)\]\s+(?<level>[^\s]+)\s+(?<message>.*)
+        Time_Key    time_orig
+        Time_Format %Y-%m-%d %H:%M:%S.%L
+        Time_Keep   On
