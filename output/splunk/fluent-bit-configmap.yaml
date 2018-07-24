@@ -41,6 +41,7 @@ data:
         Merge_Log           On
         K8S-Logging.Parser  On
 
+
   output-splunk.conf: |
     [OUTPUT]
         Name           splunk
