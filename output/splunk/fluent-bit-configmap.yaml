@@ -41,7 +41,7 @@ data:
         Merge_Log           On
         K8S-Logging.Parser  On
 
-  output-kafka.conf: |
+  output-splunk.conf: |
     [OUTPUT]
         Name           splunk
         Match          *
