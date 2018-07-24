@@ -20,7 +20,7 @@ data:
 
     @INCLUDE input-kubernetes.conf
     @INCLUDE filter-kubernetes.conf
-    @INCLUDE output-kafka.conf
+    @INCLUDE output-splunk.conf
 
   input-kubernetes.conf: |
     [INPUT]
@@ -41,7 +41,7 @@ data:
         Merge_Log           On
         K8S-Logging.Parser  On
 
-  output-kafka.conf: |
+  output-splunk.conf: |
     [OUTPUT]
         Name           splunk
         Match          *
