@@ -8,6 +8,8 @@ metadata:
     version: v1
     kubernetes.io/cluster-service: "true"
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -24,12 +26,22 @@ spec:
         image: fluent/fluent-bit:0.14.3
         imagePullPolicy: Always
         ports:
-          - containerPort: 2020
-        env:
-        - name: FLUENT_ELASTICSEARCH_HOST
-          value: "elasticsearch"
-        - name: FLUENT_ELASTICSEARCH_PORT
-          value: "9200"
+        - containerPort: 2020
+        readinessProbe:
+          httpGet:
+            path: /api/v1/metrics/prometheus
+            port: 2020
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 2020
+        resources:
+          requests:
+            cpu: 2m
+            memory: 5Mi
+          limits:
+            cpu: 10m
+            memory: 10Mi
         volumeMounts:
         - name: varlog
           mountPath: /var/log
@@ -38,6 +50,9 @@ spec:
           readOnly: true
         - name: fluent-bit-config
           mountPath: /fluent-bit/etc/
+        - name: mnt
+          mountPath: /mnt
+          readOnly: true
       terminationGracePeriodSeconds: 10
       volumes:
       - name: varlog
@@ -49,6 +64,9 @@ spec:
       - name: fluent-bit-config
         configMap:
           name: fluent-bit-config
+      - name: mnt
+        hostPath:
+          path: /mnt
       serviceAccountName: fluent-bit
       tolerations:
       - key: node-role.kubernetes.io/master

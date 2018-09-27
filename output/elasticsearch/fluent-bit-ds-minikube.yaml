@@ -14,10 +14,17 @@ spec:
         k8s-app: fluent-bit-logging
         version: v1
         kubernetes.io/cluster-service: "true"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "2020"
+        prometheus.io/path: /api/v1/metrics/prometheus
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:0.12.14
+        image: fluent/fluent-bit:0.14.3
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 2020
         env:
         - name: FLUENT_ELASTICSEARCH_HOST
           value: "elasticsearch"

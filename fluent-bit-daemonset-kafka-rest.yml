@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:0.12-dev
+        image: fluent/fluent-bit:0.12.19
         env:
           - name:  KAFKA_REST_HOST
             value: rest.kafka.svc.cluster.local
