@@ -37,7 +37,7 @@ data:
     [FILTER]
         Name                kubernetes
         Match               kube.*
-        Kube_URL            https://kubernetes.default.svc.cluster.local:443
+        Kube_URL            https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT_HTTPS}
         Merge_Log           On
         K8S-Logging.Parser  On
 
