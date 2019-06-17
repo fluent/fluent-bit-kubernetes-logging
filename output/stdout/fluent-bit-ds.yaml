@@ -1,15 +1,15 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  annotations:
-    fluentbit.io/exclude: 'true'
   labels:
     app: fluent-bit-logging
+    fluentbit.io/exclude: 'true'
     kubernetes.io/cluster-service: 'true'
     version: v1
   name: fluent-bit
   namespace: logging
 spec:
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       k8s-app: fluent-bit-logging
@@ -18,16 +18,18 @@ spec:
   template:
     metadata:
       annotations:
+        fluentbit.io/exclude: 'true'
         prometheus.io/path: /api/v1/metrics/prometheus
         prometheus.io/port: '2020'
         prometheus.io/scrape: 'true'
+      creationTimestamp: null
       labels:
         k8s-app: fluent-bit-logging
         kubernetes.io/cluster-service: 'true'
         version: v1
     spec:
       containers:
-        - image: 'fluent/fluent-bit:1.0.6'
+        - image: 'fluent/fluent-bit:1.1'
           imagePullPolicy: Always
           name: fluent-bit
           ports:
@@ -35,20 +37,36 @@ spec:
               protocol: TCP
             - containerPort: 24284
               protocol: TCP
-          resources: {}
+          resources:
+            limits:
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 512Mi
+          securityContext:
+            privileged: true
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
           volumeMounts:
             - mountPath: /fluent-bit/etc/
               name: fluent-bit-config
+            - mountPath: /var/lib/docker/containers
+              name: varlibdockercontainers
+              readOnly: true
+            - mountPath: /var/log
+              name: varlog
       dnsPolicy: ClusterFirst
+      hostAliases:
+        - hostnames:
+            - fluent1
+          ip: 10.206.194.30
       nodeSelector:
         node-role.kubernetes.io/compute: 'true'
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
-      serviceAccount: fluent-bit
-      serviceAccountName: fluent-bit
+      serviceAccount: aggregated-logging-fluentd
+      serviceAccountName: aggregated-logging-fluentd
       terminationGracePeriodSeconds: 10
       tolerations:
         - effect: NoSchedule
@@ -63,5 +81,13 @@ spec:
             defaultMode: 420
             name: fluent-bit-config
           name: fluent-bit-config
+        - hostPath:
+            path: /var/lib/docker/containers
+            type: ''
+          name: varlibdockercontainers
+        - hostPath:
+            path: /var/log
+            type: ''
+          name: varlog
   updateStrategy:
     type: OnDelete

@@ -6,7 +6,7 @@ metadata:
   name: fluent-bit-config
   namespace: logging
 data:
-  filter-kubernetes.conf: |
+  filter-kubernetes.conf: |-
     [FILTER]
         Name                kubernetes
         Match               kube.*
@@ -16,7 +16,7 @@ data:
         Merge_Log           On
         K8S-Logging.Parser  On
         K8S-Logging.Exclude On
-  fluent-bit.conf: |
+  fluent-bit.conf: |-
     [SERVICE]
         Flush         1
         Log_Level     info
@@ -25,21 +25,38 @@ data:
         HTTP_Server   On
         HTTP_Listen   0.0.0.0
         HTTP_Port     2020
+        Streams_File stream_processor.conf
     @INCLUDE input-kubernetes.conf
     @INCLUDE filter-kubernetes.conf
     @INCLUDE output-stdout.conf
-  input-kubernetes.conf: |
+  input-kubernetes.conf: |-
     [INPUT]
-        Name              forward
-        Listen            0.0.0.0
-        Port              24224
-        Buffer_Chunk_Size 8m
-        Buffer_Max_Size   64m
-  output-stdout.conf: |
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/containers/*_gvp_*.log
+        Parser            docker
+        DB                /var/log/flb_kube.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+    #[INPUT]
+    #    Name              forward
+    #    Listen            0.0.0.0
+    #    Port              24224
+    #    Buffer_Chunk_Size 8m
+    #    Buffer_Max_Size   64m
+    #    Alias fluentd
+  output-stdout.conf: |-
     [OUTPUT]
         Name   stdout
         Match  *
-  parsers.conf: |
+        Format json_lines
+    [OUTPUT]
+        Name        kafka
+        Match       *
+        Brokers     10.206.194.30:24224
+        Topics      raw_logs
+  parsers.conf: |-
     [PARSER]
         Name        docker
         Format      json
@@ -49,4 +66,4 @@ data:
         # Command      |  Decoder | Field | Optional Action
         # =============|==================|=================
         Decode_Field_As   escaped    log
-
+  stream_processor.conf: "#[STREAM_TASK]\r\n#    Name   kubernetes_test\r\n#    Exec   CREATE STREAM kube WITH (tag='results') AS SELECT kubernetes,message from STREAM:fluentd;"
