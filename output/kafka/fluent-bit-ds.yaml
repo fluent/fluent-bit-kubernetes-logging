@@ -29,7 +29,7 @@ spec:
         version: v1
     spec:
       containers:
-        - image: 'fluent/fluent-bit:1.1'
+        - image: 'fluent/fluent-bit:1.2'
           imagePullPolicy: Always
           name: fluent-bit
           ports:
