@@ -1,39 +1,6 @@
 apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: fluent-bit-config
-  namespace: logging
-  labels:
-    k8s-app: fluent-bit
 data:
-  # Configuration files: server, input, filters and output
-  # ======================================================
-  fluent-bit.conf: |
-    [SERVICE]
-        Flush         1
-        Log_Level     info
-        Daemon        off
-        Parsers_File  parsers.conf
-        HTTP_Server   On
-        HTTP_Listen   0.0.0.0
-        HTTP_Port     2020
-
-    @INCLUDE input-kubernetes.conf
-    @INCLUDE filter-kubernetes.conf
-    @INCLUDE output-kafka.conf
-
-  input-kubernetes.conf: |
-    [INPUT]
-        Name              tail
-        Tag               kube.*
-        Path              /var/log/containers/*.log
-        Parser            docker
-        DB                /var/log/flb_kube.db
-        Mem_Buf_Limit     5MB
-        Skip_Long_Lines   On
-        Refresh_Interval  10
-
-  filter-kubernetes.conf: |
+  filter-kubernetes.conf: |-
     [FILTER]
         Name                kubernetes
         Match               kube.*
@@ -42,56 +9,51 @@ data:
         Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Merge_Log           On
         K8S-Logging.Parser  On
-        K8S-Logging.Exclude Off
-
-  output-kafka.conf: |
+        K8S-Logging.Exclude On
+  fluent-bit.conf: |-
+    [SERVICE]
+        Flush         1
+        Log_Level     info
+        Daemon        off
+        Parsers_File  parsers.conf
+        HTTP_Server   On
+        HTTP_Listen   0.0.0.0
+        HTTP_Port     2020
+        Streams_File stream_processor.conf
+    @INCLUDE input-kubernetes.conf
+    @INCLUDE filter-kubernetes.conf
+    @INCLUDE output-stdout.conf
+  input-kubernetes.conf: |-
+    [INPUT]
+        Name              tail
+        Tag               kube.*
+        Path              /var/log/containers/*_gvp_*.log
+        Parser            docker
+        DB                /var/log/flb_kube.db
+        Mem_Buf_Limit     5MB
+        Skip_Long_Lines   On
+        Refresh_Interval  10
+    #[INPUT]
+    #    Name              forward
+    #    Listen            0.0.0.0
+    #    Port              24224
+    #    Buffer_Chunk_Size 8m
+    #    Buffer_Max_Size   64m
+    #    Alias fluentd
+  output-stdout.conf: |-
     [OUTPUT]
-        Name           kafka
-        Match          *
-        Brokers        bootstrap.kafka:9092
-        Topics         ops.kube-logs-fluentbit.stream.json.001
-        Timestamp_Key  @timestamp
-        Retry_Limit    false
-        # hides errors "Receive failed: Disconnected" when kafka kills idle connections
-        rdkafka.log.connection.close false
-        # producer buffer is not included in http://fluentbit.io/documentation/0.12/configuration/memory_usage.html#estimating
-        rdkafka.queue.buffering.max.kbytes 10240
-        # for logs you'll probably want this ot be 0 or 1, not more
-        rdkafka.request.required.acks 1
-
-  parsers.conf: |
-    [PARSER]
-        Name   apache
-        Format regex
-        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
-        Time_Key time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
-
-    [PARSER]
-        Name   apache2
-        Format regex
-        Regex  ^(?<host>[^ ]*) [^ ]* (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^ ]*) +\S*)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
-        Time_Key time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
-
-    [PARSER]
-        Name   apache_error
-        Format regex
-        Regex  ^\[[^ ]* (?<time>[^\]]*)\] \[(?<level>[^\]]*)\](?: \[pid (?<pid>[^\]]*)\])?( \[client (?<client>[^\]]*)\])? (?<message>.*)$
-
-    [PARSER]
-        Name   nginx
-        Format regex
-        Regex ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
-        Time_Key time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
-
-    [PARSER]
-        Name   json
-        Format json
-        Time_Key time
-        Time_Format %d/%b/%Y:%H:%M:%S %z
-
+        Name   stdout
+        Match  *
+        Format json_lines
+    [OUTPUT]
+        Name        kafka
+        Match       *
+        Brokers     10.206.194.30:24224
+        Topics      raw_logs
+        Message_Key gvp_ns_key
+        Tag_Key     gvp_tag
+        Include_Tag_Key On
+  parsers.conf: |-
     [PARSER]
         Name        docker
         Format      json
@@ -101,10 +63,10 @@ data:
         # Command      |  Decoder | Field | Optional Action
         # =============|==================|=================
         Decode_Field_As   escaped    log
-
-    [PARSER]
-        Name        syslog
-        Format      regex
-        Regex       ^\<(?<pri>[0-9]+)\>(?<time>[^ ]* {1,2}[^ ]* [^ ]*) (?<host>[^ ]*) (?<ident>[a-zA-Z0-9_\/\.\-]*)(?:\[(?<pid>[0-9]+)\])?(?:[^\:]*\:)? *(?<message>.*)$
-        Time_Key    time
-        Time_Format %b %d %H:%M:%S
+  stream_processor.conf: "#[STREAM_TASK]\r\n#    Name   kubernetes_test\r\n#    Exec   CREATE STREAM kube WITH (tag='results') AS SELECT kubernetes,message from STREAM:fluentd;"
+kind: ConfigMap
+metadata:
+  labels:
+    k8s-app: fluent-bit
+  name: fluent-bit-config
+  namespace: logging
