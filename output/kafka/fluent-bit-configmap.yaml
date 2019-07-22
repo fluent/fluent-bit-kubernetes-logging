@@ -33,13 +33,6 @@ data:
         Mem_Buf_Limit     5MB
         Skip_Long_Lines   On
         Refresh_Interval  10
-    #[INPUT]
-    #    Name              forward
-    #    Listen            0.0.0.0
-    #    Port              24224
-    #    Buffer_Chunk_Size 8m
-    #    Buffer_Max_Size   64m
-    #    Alias fluentd
   output-stdout.conf: |-
     [OUTPUT]
         Name   stdout
@@ -60,9 +53,6 @@ data:
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
         Time_Keep   On
-        # Command      |  Decoder | Field | Optional Action
-        # =============|==================|=================
-        Decode_Field_As   escaped    log
   stream_processor.conf: "#[STREAM_TASK]\r\n#    Name   kubernetes_test\r\n#    Exec   CREATE STREAM kube WITH (tag='results') AS SELECT kubernetes,message from STREAM:fluentd;"
 kind: ConfigMap
 metadata:
