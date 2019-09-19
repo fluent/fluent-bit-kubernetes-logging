@@ -2,6 +2,61 @@ apiVersion: v1
 data:
   filter-kubernetes.conf: |-
     [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.alexa*
+        Key_Name         log
+        Parser           alexa
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.spotlight*
+        Key_Name         log
+        Parser           spotlight
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.netflixapi*
+        Key_Name         log
+        Parser           netflixapi
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.sso*
+        Key_Name         log
+        Parser           sso
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.amazonapi*
+        Key_Name         log
+        Parser           amazonapi
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.athena*
+        Key_Name         log
+        Parser           athena
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.epg*
+        Key_Name         log
+        Parser           epg
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.gutentag*
+        Key_Name         log
+        Parser           gutentag
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.jobsapi*
+        Key_Name         log
+        Parser           jobsapi
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.pulse*
+        Key_Name         log
+        Parser           pulse
+    [FILTER]
+        Name             parser
+        Match            kube.var.log.containers.rap*
+        Key_Name         log
+        Parser           rap
+    [FILTER]
         Name                kubernetes
         Match               kube.*
         Kube_URL            https://kubernetes.default.svc:443
@@ -13,7 +68,7 @@ data:
   fluent-bit.conf: |-
     [SERVICE]
         Flush         1
-        Log_Level     info
+        Log_Level     debug
         Daemon        off
         Parsers_File  parsers.conf
         HTTP_Server   On
@@ -43,9 +98,6 @@ data:
         Match       *
         Brokers     10.206.194.30:24224
         Topics      raw_logs
-        Message_Key gvp_ns_key
-        Tag_Key     gvp_tag
-        Include_Tag_Key On
   parsers.conf: |-
     [PARSER]
         Name        docker
@@ -53,6 +105,76 @@ data:
         Time_Key    time
         Time_Format %Y-%m-%dT%H:%M:%S.%L
         Time_Keep   On
+        # Command      |  Decoder | Field | Optional Action
+        # =============|==================|=================
+        #Decode_Field_As   escaped    log
+    [PARSER]
+        Name alexa
+        Format Regex
+        Regex .*?\\\"request_id\\\"(?:\:\\\"|\:)(?<aux5>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"elapsed_time\\\"(?:\:\\\"|\:)(?<elapsed_time>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"component\\\"(?:\:\\\"|\:)(?<sitename>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"timestamp\\\"(?:\:\\\"|\:)(?<timestamp>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"level\\\"(?:\:\\\"|\:)(?<level>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"message\\\"\:\{\\\"method\\\"(?:\:\\\"|\:)(?<method>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"url\\\"(?:\:\\\"|\:)(?<uri_stem>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"query_string\\\"(?:\:\\\"|\:)(?<uri_query>(?:[^\\\"]+|null))(?:\\\"\,|\,).*?\\\"response_time\\\"(?:\:\\\"|\:)(?<rt>.*?)ms(?:\\\"\,|\,).*?\\\"status_code\\\"(?:\:\\\"|\:)(?<code>[^\,]+)\,.*?\\\"response_length\\\"(?:\:\\\"|\:)(?<bytes_out>[^\}]+)
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name spotlight
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*).*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name rap
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name netflixapi
+        Format Regex
+        Regex ^.*\{"request_id":"(?<aux5>.*?)","elapsed_time":"(?<aux2>.*?)","component":"(?<sitename>.*?)","timestamp":"(?<timestamp>.*?)","level":"(?<level>.*?)","message":{"method":"(?<method>.*?)","url":"(?<uri-stem>.*?)","query_string":(?<uri-query>.*?),"response_time":"(?<rt>.*?)ms","status_code":(?<code>\d.*?),"response_length":(?<bytes_out>\d*+)\}\}$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name sso
+        Format Regex
+        Regex ^.*\{"component": "(?<sitename>.*?)", "timestamp": "(?<timestamp>.*?)", "level": "(?<level>.*?)", "message": "{"method":"(?<method>.*?)","url":"(?<uri-stem>.*?)","query_string":"(?<uri-query>.*?)","status_code":(?<code>\d.*?),"response_length":(?<bytes_out>\d*+),"response_time":(?<rt>.*?)}", "requestId": "(?<aux5>.*?)"\}$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name amazonapi
+        Format Regex
+        Regex ^.*\{"component": "(?<sitename>.*?)", "timestamp": "(?<timestamp>.*?)", "level": "(?<level>.*?)", "message": "{"method":"(?<method>.*?)","url":"(?<uri-stem>.*?)","query_string":"(?<uri-query>.*?)","status_code":(?<code>\d.*?),"response_length":(?<bytes_out>\d*+),"response_time":(?<rt>.*?)}", "requestId": "(?<aux5>.*?)"\}$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name athena
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name epg
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name gutentag
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name jobsapi
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+    [PARSER]
+        Name pulse
+        Format Regex
+        Regex ^(?<time>[^ ]*),(?<level>[^ ]*),(?<id1>[^ ]*),(?<id2>[^ ]*),.+,msg="(?<msg>[^$]*)".*$
+        Time_Key timestamp
+        Time_Format %Y-%m-%dT%H:%M:%S
+        
   stream_processor.conf: "#[STREAM_TASK]\r\n#    Name   kubernetes_test\r\n#    Exec   CREATE STREAM kube WITH (tag='results') AS SELECT kubernetes,message from STREAM:fluentd;"
 kind: ConfigMap
 metadata:
