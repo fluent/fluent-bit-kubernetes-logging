@@ -16,9 +16,15 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 ```
 $ kubectl create namespace logging
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role.yaml
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/base/fluent-bit-service-account.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/base/fluent-bit-role.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/base/fluent-bit-role-binding.yaml
+```
+
+Or using [Kustomize](https://kustomize.io/)
+
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging | kubectl create -f -
 ```
 
 #### Fluent Bit to Elasticsearch
@@ -33,6 +39,11 @@ Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes 
 
 ```
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
+```
+
+Or using kustomize: 
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/elasticsearch | kubectl create -f -
 ```
 
 #### Fluent Bit to Elasticsearch on Minikube
@@ -55,6 +66,11 @@ Fluent Bit DaemonSet ready to be used with Kafka on a normal Kubernetes Cluster:
 
 ```
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-ds.yaml
+```
+
+Or using kustomize: 
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/kafka | kubectl create -f -
 ```
 
 #### Fluent Bit to Elasticsearch on Minikube
