@@ -65,6 +65,28 @@ If you are using Minikube for testing purposes, use the following alternative Da
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
 ```
 
+#### Fluent Bit to Loggly
+
+This example uses HTTP to deliver logs from fluent-bit to Loggly.
+
+The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
+
+```
+$ kubectl apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/loggly/fluent-bit-configmap.yaml
+```
+
+Modify the the DaemonSet manifest from:
+https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/loggly/fluent-bit-ds.yaml
+
+Replace `<YOUR LOGGLY TAG>` and `<YOUR LOGGLY TOKEN>` with your desired values. It is a good idea to
+retrieve the value for `LOGGLY_TOKEN` from a Kubernetes Secret.
+
+Once you've made your modifications, apply the manifest:
+
+```
+$ kubectl apply -f fluent-bit-ds.yaml
+```
+
 ## Details
 
 The default configuration of Fluent Bit makes sure of the following:

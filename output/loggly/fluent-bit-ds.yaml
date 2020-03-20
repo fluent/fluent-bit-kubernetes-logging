@@ -1,0 +1,54 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  labels:
+    k8s-app: fluent-bit-logging
+    kubernetes.io/cluster-service: "true"
+    version: v1
+  name: fluent-bit
+  namespace: logging
+spec:
+  template:
+    metadata:
+      annotations:
+        prometheus.io/path: /api/v1/metrics/prometheus
+        prometheus.io/port: "2020"
+        prometheus.io/scrape: "true"
+      labels:
+        k8s-app: fluent-bit-logging
+        kubernetes.io/cluster-service: "true"
+        version: v1
+    spec:
+      containers:
+      - env:
+        - name: LOGGLY_HOSTNAME
+          value: logs-01.loggly.com
+        - name: LOGGLY_TAG
+          value: <YOUR LOGGLY TAG>
+        - name: LOGGLY_TOKEN
+          value: <YOUR LOGGLY TOKEN>
+        image: fluent/fluent-bit:1.3.11
+        imagePullPolicy: Always
+        name: fluent-bit
+        ports:
+        - containerPort: 2020
+        volumeMounts:
+        - mountPath: /var/log
+          name: varlog
+        - mountPath: /var/lib/docker/containers
+          name: varlibdockercontainers
+          readOnly: true
+        - mountPath: /fluent-bit/etc/
+          name: fluent-bit-config
+      serviceAccountName: fluent-bit
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - hostPath:
+          path: /var/log
+        name: varlog
+      - hostPath:
+          path: /var/lib/docker/containers
+        name: varlibdockercontainers
+      - configMap:
+          name: fluent-bit-config
+        name: fluent-bit-config
