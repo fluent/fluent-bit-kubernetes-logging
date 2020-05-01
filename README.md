@@ -21,6 +21,12 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
 ```
 
+Alternatively, you can use [Kustomize](https://kustomize.io/), which is also built into newer versions of kubectl.
+
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/kustomize | kubectl create -f -
+```
+
 #### Fluent Bit to Elasticsearch
 
 The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
@@ -35,12 +41,24 @@ Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes 
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
 ```
 
+Or, if you are using kustomize:
+
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/elasticsearch/ | kubectl create -f -
+```
+
 #### Fluent Bit to Elasticsearch on Minikube
 
 If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
 
 ```
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
+```
+
+Or, if you are using kustomize:
+
+```
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/elasticsearch-minikube | kubectl create -f -
 ```
 
 #### Fluent Bit to Kafka
@@ -57,12 +75,10 @@ Fluent Bit DaemonSet ready to be used with Kafka on a normal Kubernetes Cluster:
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-ds.yaml
 ```
 
-#### Fluent Bit to Elasticsearch on Minikube
-
-If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
+Or, if you are using kustomize:
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
+$ kustomize build github.com/fluent/fluent-bit-kubernetes-logging/output/kafka | kubectl create -f -
 ```
 
 ## Details
