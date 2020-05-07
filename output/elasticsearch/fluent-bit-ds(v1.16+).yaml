@@ -8,7 +8,7 @@ metadata:
     version: v1
     kubernetes.io/cluster-service: "true"
 spec:
-  selectors:
+  selector:
     matchLabels:
       k8s-app: fluent-bit-logging
       version: v1
