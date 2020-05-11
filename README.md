@@ -21,6 +21,12 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
 ```
 
+If you are deploying fluent-bit on openshift, you additionally need to run:
+
+```
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-openshift-security-context-constraints.yaml
+```
+
 #### Fluent Bit to Elasticsearch
 
 The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
