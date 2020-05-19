@@ -1,4 +1,4 @@
-# Kubernetes Logging with Fluent Bit v1.0.4
+# Kubernetes Logging with Fluent Bit
 
 
 
