@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluent-bit
@@ -10,6 +10,10 @@ metadata:
 spec:
   updateStrategy:
     type: RollingUpdate
+  selector:
+    matchLabels:
+      k8s-app: fluent-bit-logging
+      version: v1
   template:
     metadata:
       labels:
