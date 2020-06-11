@@ -35,6 +35,8 @@ The next step is to create a ConfigMap that will be used by our Fluent Bit Daemo
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
 ```
 
+If the cluster uses a CRI runtime, like containerd or CRI-O, change the `Parser` described in `input-kubernetes.conf` from docker to cri.
+
 Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes Cluster:
 
 ```
