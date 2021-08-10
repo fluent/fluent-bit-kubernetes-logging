@@ -29,7 +29,16 @@ spec:
       - name: fluent-bit
         image: docker.io/fluent/fluent-bit
         ports:
-        - containerPort: 2020
+        - name: http
+          containerPort: 2020
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health
+            port: http
         volumeMounts:
         - name: varlog
           mountPath: /var/log
