@@ -3,6 +3,10 @@ kind: Kustomization
 
 namespace: logging
 
+images:
+- name: docker.io/fluent/fluent-bit
+  newTag: 1.8.3@sha256:10ea2709cef6e7059d980b4969d5f9d753ef97278a817c214cbe9120b1152082
+
 commonLabels:
   app.kubernetes.io/name: fluent-bit
 

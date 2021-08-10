@@ -27,7 +27,7 @@ spec:
         effect: NoExecute
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit
+        image: docker.io/fluent/fluent-bit
         ports:
         - containerPort: 2020
         volumeMounts:
