@@ -8,7 +8,7 @@ resources:
 - fluent-bit-daemonset.yaml
 
 configMapGenerator:
-- name: fluent-bit-config
+- name: fluent-bit
   files:
   - fluent-bit.conf
   - input-kubernetes.conf
