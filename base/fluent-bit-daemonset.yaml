@@ -19,7 +19,7 @@ spec:
         prometheus.io/path: /api/v1/metrics/prometheus
     spec:
       serviceAccountName: fluent-bit
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 25
       tolerations:
       - key: node-role.kubernetes.io/master
         operator: Exists
