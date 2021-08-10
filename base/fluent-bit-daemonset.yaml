@@ -24,10 +24,8 @@ spec:
       - key: node-role.kubernetes.io/master
         operator: Exists
         effect: NoSchedule
-      - operator: "Exists"
-        effect: "NoExecute"
-      - operator: "Exists"
-        effect: "NoSchedule"
+      - operator: Exists
+        effect: NoExecute
       containers:
       - name: fluent-bit
         image: fluent/fluent-bit:1.5
