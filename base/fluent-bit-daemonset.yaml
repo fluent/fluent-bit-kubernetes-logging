@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluent-bit
-  namespace: logging
   labels:
     app.kubernetes.io/name: fluent-bit
 spec:
@@ -28,15 +27,9 @@ spec:
         effect: NoExecute
       containers:
       - name: fluent-bit
-        image: fluent/fluent-bit:1.5
-        imagePullPolicy: Always
+        image: fluent/fluent-bit
         ports:
-          - containerPort: 2020
-        env:
-        - name: FLUENT_ELASTICSEARCH_HOST
-          value: "elasticsearch"
-        - name: FLUENT_ELASTICSEARCH_PORT
-          value: "9200"
+        - containerPort: 2020
         volumeMounts:
         - name: varlog
           mountPath: /var/log
