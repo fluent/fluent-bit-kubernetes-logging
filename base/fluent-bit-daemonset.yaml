@@ -5,7 +5,6 @@ metadata:
   namespace: logging
   labels:
     app.kubernetes.io/name: fluent-bit
-    kubernetes.io/cluster-service: "true"
 spec:
   selector:
     matchLabels:
@@ -14,7 +13,6 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: fluent-bit
-        kubernetes.io/cluster-service: "true"
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "2020"
