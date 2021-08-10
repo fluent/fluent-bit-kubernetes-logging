@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+commonLabels:
+  app.kubernetes.io/name: fluent-bit
+
+resources:
+- fluent-bit-daemonset.yaml
+
+configMapGenerator:
+- name: fluent-bit-config
+  files:
+  - fluent-bit.conf
+  - input-kubernetes.conf
+  - filter-kubernetes.conf
+  - output-elasticsearch.conf
+  - parsers.conf
