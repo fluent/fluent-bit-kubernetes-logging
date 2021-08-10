@@ -18,6 +18,16 @@ spec:
         prometheus.io/port: "2020"
         prometheus.io/path: /api/v1/metrics/prometheus
     spec:
+      serviceAccountName: fluent-bit
+      terminationGracePeriodSeconds: 10
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - operator: "Exists"
+        effect: "NoExecute"
+      - operator: "Exists"
+        effect: "NoSchedule"
       containers:
       - name: fluent-bit
         image: fluent/fluent-bit:1.5
@@ -37,7 +47,6 @@ spec:
           readOnly: true
         - name: fluent-bit-config
           mountPath: /fluent-bit/etc/
-      terminationGracePeriodSeconds: 10
       volumes:
       - name: varlog
         hostPath:
@@ -48,12 +57,3 @@ spec:
       - name: fluent-bit-config
         configMap:
           name: fluent-bit-config
-      serviceAccountName: fluent-bit
-      tolerations:
-      - key: node-role.kubernetes.io/master
-        operator: Exists
-        effect: NoSchedule
-      - operator: "Exists"
-        effect: "NoExecute"
-      - operator: "Exists"
-        effect: "NoSchedule"
