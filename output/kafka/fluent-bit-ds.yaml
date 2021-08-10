@@ -13,6 +13,7 @@ spec:
   selector:
     matchLabels:
       k8s-app: fluent-bit-logging
+      version: v1
   template:
     metadata:
       labels:
