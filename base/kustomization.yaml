@@ -20,5 +20,5 @@ configMapGenerator:
   - fluent-bit.conf
   - input-kubernetes.conf
   - filter-kubernetes.conf
-  - output-elasticsearch.conf
+  - outputs.conf
   - parsers.conf

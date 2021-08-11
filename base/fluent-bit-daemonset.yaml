@@ -28,6 +28,9 @@ spec:
       containers:
       - name: fluent-bit
         image: docker.io/fluent/fluent-bit
+        env:
+        - name: LOG_LEVEL
+          value: debug
         ports:
         - name: http
           containerPort: 2020
@@ -40,20 +43,27 @@ spec:
             path: /api/v1/health
             port: http
         volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-        - name: varlibdockercontainers
-          mountPath: /var/lib/docker/containers
+        - name: varlogpods
+          mountPath: /var/log/pods
           readOnly: true
+        - name: db
+          mountPath: /var/run/fluent-bit
         - name: config
           mountPath: /fluent-bit/etc/
+        # - mountPath: /etc/machine-id
+        #   name: etcmachineid
+        #   readOnly: true
       volumes:
-      - name: varlog
+      - name: varlogpods
         hostPath:
-          path: /var/log
-      - name: varlibdockercontainers
+          path: /var/log/pods
+      - name: db
         hostPath:
-          path: /var/lib/docker/containers
+          path: /var/run/fluent-bit
+      # - name: etcmachineid
+      #   hostPath:
+      #     path: /etc/machine-id
+      #     type: File
       - name: config
         configMap:
           name: fluent-bit
