@@ -31,6 +31,8 @@ spec:
         env:
         - name: LOG_LEVEL
           value: debug
+        - name: MEM_BUF_LIMIT
+          value: 5MB
         ports:
         - name: http
           containerPort: 2020
