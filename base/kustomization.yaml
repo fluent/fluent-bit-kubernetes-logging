@@ -18,7 +18,8 @@ configMapGenerator:
 - name: fluent-bit
   files:
   - fluent-bit.conf
+  - parser-cri.conf
   - input-kubernetes.conf
   - filter-kubernetes.conf
-  - outputs.conf
   - parsers.conf
+  - outputs.conf
