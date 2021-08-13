@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: loki
+  name: loki-query
   labels:
-    app: loki
+    app.kubernetes.io/name: loki
 spec:
   type: ClusterIP
   ports:
@@ -16,4 +16,4 @@ spec:
     protocol: TCP
     targetPort: grpc
   selector:
-    app: loki
+    app.kubernetes.io/name: loki

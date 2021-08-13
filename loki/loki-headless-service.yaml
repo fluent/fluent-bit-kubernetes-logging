@@ -10,6 +10,11 @@ spec:
   ports:
   - name: gossip
     port: 7946
+    protocol: TCP
     targetPort: gossip
+  - name: grpc
+    port: 9096
+    protocol: TCP
+    targetPort: grpc
   selector:
-    app: loki
+    app.kubernetes.io/name: loki
