@@ -7,17 +7,22 @@ images:
 
 resources:
 - ../base
-- loki-service.yaml
+- loki-ingest-service.yaml
+- loki-query-service.yaml
 - loki-headless-service.yaml
 - loki-statefulset.yaml
 
 secretGenerator:
 - name: loki
   files:
-  - loki.yaml
+  - loki.yaml=standalone.config.yaml
 
 configMapGenerator:
-- name: fluent-bit
+- name: fluentbit
   behavior: merge
   files:
   - outputs.conf=outputs-loki.conf
+  - labelmap.json
+
+patchesStrategicMerge:
+- debug-container.yaml

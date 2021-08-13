@@ -3,25 +3,24 @@ kind: StatefulSet
 metadata:
   name: loki
   labels:
-    app: loki
+    app.kubernetes.io/name: loki
 spec:
   replicas: 1
-  podManagementPolicy: OrderedReady
+  podManagementPolicy: Parallel
   updateStrategy:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: loki
+      app.kubernetes.io/name: loki
   serviceName: loki-headless
   template:
     metadata:
       labels:
-        app: loki
+        app.kubernetes.io/name: loki
       annotations:
-        prometheus.io/port: http-metrics
+        prometheus.io/port: http
         prometheus.io/scrape: "true"
     spec:
-      #serviceAccountName: loki
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
@@ -30,31 +29,46 @@ spec:
       terminationGracePeriodSeconds: 25
       containers:
       - name: loki
-        image: grafana/loki:2.3.0
+        image: docker.io/grafana/loki
         securityContext:
           readOnlyRootFilesystem: true
         args:
         - -config.file=/etc/loki/loki.yaml
+        - -config.expand-env=true
+        - -log.level=$(LOG_LEVEL)
+        env:
+        - name: LOG_LEVEL
+          value: info
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         ports:
-        - name: http-metrics
+        - name: http
           containerPort: 3100
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /ready
-            port: http-metrics
+        - name: grpc
+          containerPort: 9096
+          protocol: TCP
+        - name: gossip
+          containerPort: 7946
+          protocol: TCP
         readinessProbe:
           httpGet:
             path: /ready
-            port: http-metrics
+            port: http
         volumeMounts:
         - name: config
           mountPath: /etc/loki
-        - name: storage
-          mountPath: /data
+        - name: data
+          mountPath: /loki
       volumes:
       - name: config
         secret:
           secretName: loki
-      - name: storage
+      - name: data
         emptyDir: {}

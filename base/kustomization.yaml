@@ -8,16 +8,16 @@ images:
   newTag: 1.8.3@sha256:10ea2709cef6e7059d980b4969d5f9d753ef97278a817c214cbe9120b1152082
 
 commonLabels:
-  app.kubernetes.io/name: fluent-bit
+  app.kubernetes.io/name: fluentbit
 
 resources:
 - ../rbac
-- fluent-bit-daemonset.yaml
+- fluentbit-daemonset.yaml
 
 configMapGenerator:
-- name: fluent-bit
+- name: fluentbit
   files:
-  - fluent-bit.conf
+  - fluentbit.conf
   - parser-cri.conf
   - input-kubernetes.conf
   - filter-kubernetes.conf

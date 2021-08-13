@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: fluent-bit
+  name: fluentbit
   labels:
-    app.kubernetes.io/name: fluent-bit
+    app.kubernetes.io/name: fluentbit
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: fluent-bit
+      app.kubernetes.io/name: fluentbit
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: fluent-bit
+        app.kubernetes.io/name: fluentbit
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "2020"
         prometheus.io/path: /api/v1/metrics/prometheus
     spec:
-      serviceAccountName: fluent-bit
+      serviceAccountName: fluentbit
       terminationGracePeriodSeconds: 25
       tolerations:
       - key: node-role.kubernetes.io/master
@@ -26,8 +26,12 @@ spec:
       - operator: Exists
         effect: NoExecute
       containers:
-      - name: fluent-bit
+      - name: fluentbit
         image: docker.io/fluent/fluent-bit
+        command:
+        - /fluent-bit/bin/fluent-bit
+        - -c
+        - /etc/fluentbit/fluentbit.conf
         env:
         - name: LOG_LEVEL
           value: debug
@@ -49,9 +53,9 @@ spec:
           mountPath: /var/log/pods
           readOnly: true
         - name: db
-          mountPath: /var/run/fluent-bit
+          mountPath: /var/run/fluentbit
         - name: config
-          mountPath: /fluent-bit/etc/
+          mountPath: /etc/fluentbit
         # - mountPath: /etc/machine-id
         #   name: etcmachineid
         #   readOnly: true
@@ -61,11 +65,11 @@ spec:
           path: /var/log/pods
       - name: db
         hostPath:
-          path: /var/run/fluent-bit
+          path: /var/run/fluentbit
       # - name: etcmachineid
       #   hostPath:
       #     path: /etc/machine-id
       #     type: File
       - name: config
         configMap:
-          name: fluent-bit
+          name: fluentbit

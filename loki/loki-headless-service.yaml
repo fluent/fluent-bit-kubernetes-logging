@@ -2,11 +2,19 @@ apiVersion: v1
 kind: Service
 metadata:
   name: loki-headless
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
+  publishNotReadyAddresses: true
   clusterIP: None
   ports:
-  - name: http-metrics
-    port: 3100
-    targetPort: http-metrics
+  - name: gossip
+    port: 7946
+    protocol: TCP
+    targetPort: gossip
+  - name: grpc
+    port: 9096
+    protocol: TCP
+    targetPort: grpc
   selector:
-    app: loki
+    app.kubernetes.io/name: loki
