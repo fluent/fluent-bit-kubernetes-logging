@@ -1,8 +1,6 @@
 # For more suggested overrides see https://github.com/grafana/loki/blob/v2.3.0/cmd/loki/loki-local-config.yaml
 # and of course https://github.com/grafana/loki/blob/v2.3.0/docs/sources/configuration/_index.md
 
-#target: ingester,compactor,querier,query-frontend,table-manager
-
 auth_enabled: false
 
 server:
@@ -56,19 +54,3 @@ table_manager:
   retention_period: 0s
 
 # ruler:
-#   storage:
-#     type: local
-#     local:
-#       directory: /loki/rules
-#   rule_path: /loki/rules-temp
-#   alertmanager_url: http://localhost:9093
-#   ring:
-#     kvstore:
-#       store: inmemory
-#   enable_api: true
-
-# frontend:
-#   downstream_url: ""
-
-# frontend_worker:
-#   frontend_address: ${POD_NAME}.loki-headless.${POD_NAMESPACE}.svc.cluster.local:9096

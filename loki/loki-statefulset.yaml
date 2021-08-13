@@ -5,10 +5,10 @@ metadata:
   labels:
     app.kubernetes.io/name: loki
 spec:
-  replicas: 1 # should match the choice of CONFIG below
+  replicas: 1
   podManagementPolicy: Parallel
   updateStrategy:
-   type: RollingUpdate
+    type: RollingUpdate
   selector:
     matchLabels:
       app.kubernetes.io/name: loki
@@ -21,64 +21,24 @@ spec:
         prometheus.io/port: http
         prometheus.io/scrape: "true"
     spec:
-      #serviceAccountName: loki
       securityContext:
         fsGroup: 10001
         runAsGroup: 10001
         runAsNonRoot: true
         runAsUser: 10001
-      #terminationGracePeriodSeconds: 25
-      #containers:
-      ### for development
-      terminationGracePeriodSeconds: 1
-      shareProcessNamespace: true
-      hostAliases:
-      - ip: "127.0.0.1"
-        hostnames:
-        - "loki-ingest"
-        - "loki-query"
+      terminationGracePeriodSeconds: 25
       containers:
-      - name: debug
-        image: curlimages/curl:7.78.0@sha256:a37d88a5b626208146c6d58f75b74a93c35dfc00b6b4676c4e9d2c166ea41954
-        command:
-        - /bin/sh
-        - -ce
-        - |
-          curl -o /tmp/logcli.zip -L https://github.com/grafana/loki/releases/download/v2.3.0/logcli-linux-amd64.zip
-          (cd /tmp; unzip logcli.zip; mv logcli-linux-amd64 logcli; chmod u+x logcli)
-          sleep 1; getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
-          curl --retry-connrefused --retry 10 -s http://${POD_NAME}.loki-headless.${POD_NAMESPACE}.svc.cluster.local:3100/config
-          echo "Restart Loki using: kubectl -n $POD_NAMESPACE exec -c loki $POD_NAME -- pkill /usr/bin/loki"
-          while true; do
-            sleep 30
-            getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
-            curl -s http://localhost:3100/ready || true
-            curl -s http://localhost:3100/metrics | grep 'loki_ingester_chunk_stored_bytes_total{' || true
-            curl -s http://loki-query:3100/loki/api/v1/label/pod/values || true
-            /tmp/logcli query --no-labels '{container!=""} | logfmt' --limit=1 || true
-          done
-        env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-      ### for development end
       - name: loki
         image: docker.io/grafana/loki
         securityContext:
           readOnlyRootFilesystem: true
         args:
-        - -config.file=/etc/loki/$(CONFIG).config.yaml
+        - -config.file=/etc/loki/loki.yaml
         - -config.expand-env=true
-        #- -log.level=debug
-        - -memberlist.transport-debug=true
+        - -log.level=$(LOG_LEVEL)
         env:
-        - name: CONFIG
-          value: standalone
+        - name: LOG_LEVEL
+          value: info
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -97,10 +57,6 @@ spec:
         - name: gossip
           containerPort: 7946
           protocol: TCP
-        # livenessProbe:
-        #   httpGet:
-        #     path: /ready
-        #     port: http
         readinessProbe:
           httpGet:
             path: /ready

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: loki
+spec:
+  template:
+    spec:
+      terminationGracePeriodSeconds: 1
+      shareProcessNamespace: true
+      hostAliases:
+      - ip: "127.0.0.1"
+        hostnames:
+        - "loki-ingest"
+        - "loki-query"
+      containers:
+      - name: debug
+        image: curlimages/curl:7.78.0@sha256:a37d88a5b626208146c6d58f75b74a93c35dfc00b6b4676c4e9d2c166ea41954
+        command:
+        - /bin/sh
+        - -ce
+        - |
+          curl -o /tmp/logcli.zip -L https://github.com/grafana/loki/releases/download/v2.3.0/logcli-linux-amd64.zip
+          (cd /tmp; unzip logcli.zip; mv logcli-linux-amd64 logcli; chmod u+x logcli)
+          sleep 1; getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
+          curl --retry-connrefused --retry 10 -s http://${POD_NAME}.loki-headless.${POD_NAMESPACE}.svc.cluster.local:3100/config
+          echo "Restart Loki using: kubectl -n $POD_NAMESPACE exec -c loki $POD_NAME -- pkill /usr/bin/loki"
+          while true; do
+            sleep 30
+            getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
+            curl -s http://localhost:3100/ready || true
+            curl -s http://localhost:3100/metrics | grep 'loki_ingester_chunk_stored_bytes_total{' || true
+            curl -s http://loki-query:3100/loki/api/v1/label/pod/values || true
+            /tmp/logcli query --no-labels '{container!=""} | logfmt' --limit=1 || true
+          done
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      - name: loki
+        env:
+        - name: LOG_LEVEL
+          value: debug

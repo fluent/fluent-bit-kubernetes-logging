@@ -15,10 +15,7 @@ resources:
 secretGenerator:
 - name: loki
   files:
-  - standalone.config.yaml
-  #- distributed-s3-minio.config.yaml
-  options:
-    disableNameSuffixHash: true
+  - loki.yaml=standalone.config.yaml
 
 configMapGenerator:
 - name: fluentbit
@@ -26,3 +23,6 @@ configMapGenerator:
   files:
   - outputs.conf=outputs-loki.conf
   - labelmap.json
+
+patchesStrategicMerge:
+- debug-container.yaml
