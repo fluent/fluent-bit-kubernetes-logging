@@ -7,9 +7,13 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - name: http-metrics
+  - name: http
     port: 3100
     protocol: TCP
-    targetPort: http-metrics
+    targetPort: http
+  - name: grpc
+    port: 9096
+    protocol: TCP
+    targetPort: grpc
   selector:
     app: loki

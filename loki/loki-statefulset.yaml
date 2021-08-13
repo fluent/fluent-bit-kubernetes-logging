@@ -5,10 +5,10 @@ metadata:
   labels:
     app: loki
 spec:
-  replicas: 1
-  podManagementPolicy: OrderedReady
+  replicas: 1 # should match the choice of CONFIG below
+  podManagementPolicy: Parallel
   updateStrategy:
-    type: RollingUpdate
+   type: RollingUpdate
   selector:
     matchLabels:
       app: loki
@@ -18,7 +18,7 @@ spec:
       labels:
         app: loki
       annotations:
-        prometheus.io/port: http-metrics
+        prometheus.io/port: http
         prometheus.io/scrape: "true"
     spec:
       #serviceAccountName: loki
@@ -27,34 +27,81 @@ spec:
         runAsGroup: 10001
         runAsNonRoot: true
         runAsUser: 10001
-      terminationGracePeriodSeconds: 25
+      #terminationGracePeriodSeconds: 25
+      #containers:
+      ### for development
+      terminationGracePeriodSeconds: 1
+      shareProcessNamespace: true
       containers:
+      - name: debug
+        image: curlimages/curl:7.78.0@sha256:a37d88a5b626208146c6d58f75b74a93c35dfc00b6b4676c4e9d2c166ea41954
+        command:
+        - /bin/sh
+        - -ce
+        - |
+          while true; do
+            sleep 10
+            getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
+            curl -s http://localhost:3100/ready || true
+            curl -s http://localhost:3100/metrics | grep 'log_messages_total{' || true
+          done
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      ### for development end
       - name: loki
         image: grafana/loki:2.3.0
         securityContext:
           readOnlyRootFilesystem: true
         args:
-        - -config.file=/etc/loki/loki.yaml
+        - -config.file=/etc/loki/$(CONFIG).config.yaml
+        - -config.expand-env=true
+        - -print-config-stderr=true
+        #- -log.level=debug
+        - -memberlist.transport-debug=true
+        env:
+        - name: CONFIG
+          value: standalone
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         ports:
-        - name: http-metrics
+        - name: http
           containerPort: 3100
           protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: /ready
-            port: http-metrics
+        - name: grpc
+          containerPort: 9096
+          protocol: TCP
+        - name: gossip
+          containerPort: 7946
+          protocol: TCP
+        # livenessProbe:
+        #   httpGet:
+        #     path: /ready
+        #     port: http
         readinessProbe:
           httpGet:
             path: /ready
-            port: http-metrics
+            port: http
         volumeMounts:
         - name: config
           mountPath: /etc/loki
-        - name: storage
-          mountPath: /data
+        - name: data
+          mountPath: /loki
       volumes:
       - name: config
         secret:
           secretName: loki
-      - name: storage
+      - name: data
         emptyDir: {}

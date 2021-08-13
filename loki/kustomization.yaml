@@ -14,10 +14,14 @@ resources:
 secretGenerator:
 - name: loki
   files:
-  - loki.yaml
+  - standalone.config.yaml
+  #- distributed-s3-minio.config.yaml
+  options:
+    disableNameSuffixHash: true
 
 configMapGenerator:
 - name: fluent-bit
   behavior: merge
   files:
   - outputs.conf=outputs-loki.conf
+  - labelmap.json
