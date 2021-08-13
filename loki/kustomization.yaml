@@ -22,7 +22,6 @@ configMapGenerator:
   behavior: merge
   files:
   - outputs.conf=outputs-loki.conf
-  - labelmap.json
 
 patchesStrategicMerge:
 - debug-container.yaml
