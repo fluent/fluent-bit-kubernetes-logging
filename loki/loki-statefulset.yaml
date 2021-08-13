@@ -39,8 +39,9 @@ spec:
         - /bin/sh
         - -ce
         - |
+          echo "Restart Loki using: kubectl -n $POD_NAMESPACE exec -c loki $POD_NAME -- pkill /usr/bin/loki"
           while true; do
-            sleep 10
+            sleep 30
             getent hosts _gossip._tcp.loki-headless.${POD_NAMESPACE}.svc.cluster.local || true
             curl -s http://localhost:3100/ready || true
             curl -s http://localhost:3100/metrics | grep 'log_messages_total{' || true

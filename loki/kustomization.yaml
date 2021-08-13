@@ -20,7 +20,7 @@ secretGenerator:
     disableNameSuffixHash: true
 
 configMapGenerator:
-- name: fluent-bit
+- name: fluentbit
   behavior: merge
   files:
   - outputs.conf=outputs-loki.conf
