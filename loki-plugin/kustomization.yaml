@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../loki
+
+images:
+- name: docker.io/solsson/fluentbit-loki
+  newTag: cd467d7a00610ec4ef01da72427693e32157ce44
+
+patchesStrategicMerge:
+- fluentbit-loki-plugin.yaml
+
+configMapGenerator:
+- name: fluentbit
+  behavior: merge
+  files:
+  - outputs.conf=outputs-loki-plugin.conf
+  - labelmap.json

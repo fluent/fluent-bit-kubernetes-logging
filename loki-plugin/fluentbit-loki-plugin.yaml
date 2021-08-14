@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentbit
+spec:
+  template:
+    spec:
+      containers:
+      - name: fluentbit
+        # https://github.com/grafana/loki/tree/main/clients/cmd/fluent-bit#building
+        image: docker.io/solsson/fluentbit-loki
+        command:
+        - /fluent-bit/bin/fluent-bit
+        - -c
+        - /fluent-bit/etc/fluent-bit.conf
+        - -e
+        - /fluent-bit/bin/out_grafana_loki.so
