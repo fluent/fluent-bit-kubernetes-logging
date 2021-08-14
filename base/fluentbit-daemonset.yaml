@@ -31,7 +31,7 @@ spec:
         command:
         - /fluent-bit/bin/fluent-bit
         - -c
-        - /etc/fluentbit/fluentbit.conf
+        - /fluent-bit/etc/fluent-bit.conf
         env:
         - name: LOG_LEVEL
           value: debug
@@ -55,7 +55,7 @@ spec:
         - name: db
           mountPath: /var/run/fluentbit
         - name: config
-          mountPath: /etc/fluentbit
+          mountPath: /fluent-bit/etc
         # - mountPath: /etc/machine-id
         #   name: etcmachineid
         #   readOnly: true
