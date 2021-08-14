@@ -7,8 +7,7 @@ spec:
     spec:
       containers:
       - name: fluentbit
-        # https://github.com/grafana/loki/tree/main/clients/cmd/fluent-bit#building
-        image: docker.io/solsson/fluentbit-loki
+        image: docker.io/grafana/fluent-bit-plugin-loki
         command:
         - /fluent-bit/bin/fluent-bit
         - -c

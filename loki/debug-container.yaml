@@ -30,7 +30,7 @@ spec:
             curl -s http://localhost:3100/ready || true
             curl -s http://localhost:3100/metrics | grep 'loki_ingester_chunk_stored_bytes_total{' || true
             curl -s http://loki-query:3100/loki/api/v1/label/pod/values || true
-            /tmp/logcli query --no-labels '{container!=""} | logfmt' --limit=1 || true
+            /tmp/logcli query --no-labels '{container!=""}' --limit=1 || true
           done
         env:
         - name: POD_NAME

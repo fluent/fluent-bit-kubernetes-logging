@@ -5,8 +5,8 @@ resources:
 - ../loki
 
 images:
-- name: docker.io/solsson/fluentbit-loki
-  newTag: cd467d7a00610ec4ef01da72427693e32157ce44
+- name: docker.io/grafana/fluent-bit-plugin-loki
+  newTag: latest@sha256:c5b84f0a41359c6dabdc27e30797157c82e5f440001723e5a6ae0fa255b12811
 
 patchesStrategicMerge:
 - fluentbit-loki-plugin.yaml
