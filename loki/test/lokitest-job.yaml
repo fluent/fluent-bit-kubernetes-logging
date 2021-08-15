@@ -8,6 +8,7 @@ spec:
     spec:
       containers:
       - name: lokitest
+        # Use any image with curl and logcli, or use curlimages/curl and replace logcli use with REST api calls
         image: yolean/toil:16986b1488a60eaf2d81a8ff8f8f54f3aeacad1a@sha256:4717a46e082ac5a14da9a3e6e2aa2cd012f94989b2ee3c41ce7d39fa463d9915
         env:
         - name: POD_NAME
@@ -39,7 +40,7 @@ spec:
           curl -H "Content-Type: application/json" -XPOST -w "%{http_code}\n" "http://loki-ingest:3100/loki/api/v1/push" --data-raw "$(stream1)"
           export LOKI_ADDR=http://loki-query:3100
           logcli query '{job="lokitest"}' --from=$t
-          # Ingestion might work while distribution doesn't, in which case the results differ between pods (TODO after a delay?)
+          # Test distriuted Loki, where ingestion might work while distribution doesn't; check if results differ between pods
           for POD_IP in $(getent hosts loki-headless | cut -d' ' -f1); do
             echo "# Loki pod IP $POD_IP"
             curl -H "Content-Type: application/json" -XPOST -w "%{http_code}\n" "http://$POD_IP:3100/loki/api/v1/push" --data-raw "$(stream1)"
