@@ -18,8 +18,6 @@ spec:
       labels:
         app.kubernetes.io/name: loki
       annotations:
-        prometheus.io/port: http
-        prometheus.io/scrape: "true"
         fluentbit.io/exclude: "true"
     spec:
       securityContext:
