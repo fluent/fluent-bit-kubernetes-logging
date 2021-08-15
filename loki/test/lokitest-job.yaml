@@ -9,12 +9,22 @@ spec:
       containers:
       - name: lokitest
         image: yolean/toil:16986b1488a60eaf2d81a8ff8f8f54f3aeacad1a@sha256:4717a46e082ac5a14da9a3e6e2aa2cd012f94989b2ee3c41ce7d39fa463d9915
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         command:
         - /bin/bash
         - -cx
         - |
           alias curl='curl -f -s --retry-connrefused --retry 20'
           curl http://loki-ingest:3100/ready
+          curl http://loki-ingest:3100/metrics | grep memberlist | grep _count | grep -v gauge
           curl http://loki-ingest:3100/config
           curl http://loki-query:3100/loki/api/v1/labels
           curl http://loki-query:3100/loki/api/v1/label/pod/values
@@ -35,6 +45,6 @@ spec:
             curl -H "Content-Type: application/json" -XPOST -w "%{http_code}\n" "http://$POD_IP:3100/loki/api/v1/push" --data-raw "$(stream1)"
             logcli --addr=http://$POD_IP:3100 query '{job="lokitest"}' --from=$t
           done
-          echo "Sleeping for experiments through exec"
+          echo "Sleeping for experiments through: kubectl -n $POD_NAMESPACE exec $POD_NAME -ti -- bash"
           sleep 3600
       restartPolicy: Never
