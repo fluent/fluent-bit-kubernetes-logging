@@ -11,7 +11,7 @@ spec:
         image: yolean/toil:16986b1488a60eaf2d81a8ff8f8f54f3aeacad1a@sha256:4717a46e082ac5a14da9a3e6e2aa2cd012f94989b2ee3c41ce7d39fa463d9915
         command:
         - /bin/bash
-        - -cex
+        - -cx
         - |
           alias curl='curl -f -s --retry-connrefused --retry 20'
           curl http://loki-ingest:3100/ready
