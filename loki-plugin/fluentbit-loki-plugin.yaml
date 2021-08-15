@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentbit
+spec:
+  template:
+    spec:
+      containers:
+      - name: fluentbit
+        image: docker.io/grafana/fluent-bit-plugin-loki
+        command:
+        - /fluent-bit/bin/fluent-bit
+        - -c
+        - /fluent-bit/etc/fluent-bit.conf
+        - -e
+        - /fluent-bit/bin/out_grafana_loki.so

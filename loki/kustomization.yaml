@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+images:
+- name: docker.io/grafana/loki
+  newTag: 2.3.0@sha256:bbf6dbf3264af939a541b6f3c014cba21a2bdc8f22cb7962eee7e9048b41ea5e
+
+resources:
+- ../base
+- loki-ingest-service.yaml
+- loki-query-service.yaml
+- loki-headless-service.yaml
+- loki-statefulset.yaml
+
+secretGenerator:
+- name: loki
+  files:
+  - loki.yaml=standalone.config.yaml
+
+configMapGenerator:
+- name: fluentbit
+  behavior: merge
+  files:
+  - outputs.conf=outputs-loki.conf

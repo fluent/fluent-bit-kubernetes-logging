@@ -1,7 +1,5 @@
 # Kubernetes Logging with Fluent Bit
 
-
-
 [Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log Processor__ that comes with full support for Kubernetes:
 
 - Read Kubernetes/Docker log files from the file system or through systemd Journal
@@ -16,10 +14,10 @@ This repository contains a set of Yaml files to deploy Fluent Bit which consider
 
 ```
 $ kubectl create namespace logging
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role.yaml
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding.yaml
+$ kubectl apply -k ./base
 ```
+
+(`./base` can be replaced with a URL if [#90](https://github.com/fluent/fluent-bit-kubernetes-logging/pull/90) gets merged)
 
 If you are deploying fluent-bit on openshift, you additionally need to run:
 
@@ -27,61 +25,25 @@ If you are deploying fluent-bit on openshift, you additionally need to run:
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-openshift-security-context-constraints.yaml
 ```
 
-#### Fluent Bit to Elasticsearch
+The base only configures [Stdout](https://docs.fluentbit.io/manual/pipeline/outputs/standard-output) output.
+Log records are found using `kubectl logs` on fluentbit pods.
+This is a good way to experiment with configuration.
+Switch to [Format](https://docs.fluentbit.io/manual/pipeline/outputs/standard-output#configuration-parameters) `msgpack` to also see the "tag" (helpful when developing your pipeline).
 
-The next step is to create a ConfigMap that will be used by our Fluent Bit DaemonSet:
+## Logs ingested to Loki
 
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-configmap.yaml
-```
+This repository serves as example of Kubernetes yaml for a log processing stack,
+not as example of [how](https://docs.fluentbit.io/manual/concepts/data-pipeline) Fluent-bit can process, refine and forward log entries.
 
-If the cluster uses a CRI runtime, like containerd or CRI-O, change the `Parser` described in `input-kubernetes.conf` from docker to cri.
+Use the [loki](./loki) base to replace Stdout with forwarding to a standalone Loki instance. Loki can do some processing at [query time](https://grafana.com/docs/loki/latest/logql/) which helps keep this repo light on pipeline config.
 
-Fluent Bit DaemonSet ready to be used with Elasticsearch on a normal Kubernetes Cluster:
+The [loki-plugin](./loki-plugin) base uses an out-of-tree plugin with `DropSingleKey`
+so that the log records forwarded are the actual logged lines from pods,
+but still queryable on labels like `pod` and `container`.
 
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds.yaml
-```
+See the [lokitest](./loki/test/lokitest-job.yaml) Job for some examples of how to consume logs through Loki.
 
-#### Fluent Bit to Elasticsearch on Minikube
-
-If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
-
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
-```
-
-#### Fluent Bit to Kafka
-
-Create a ConfigMap that will be used by our Fluent Bit DaemonSet:
-
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-configmap.yaml
-```
-
-Fluent Bit DaemonSet ready to be used with Kafka on a normal Kubernetes Cluster:
-
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-ds.yaml
-```
-
-#### Fluent Bit to Elasticsearch on Minikube
-
-If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
-
-```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
-```
-
-## Details
-
-The default configuration of Fluent Bit makes sure of the following:
-
-- Consume all containers logs from the running Node.
-- The [Tail input plugin](http://fluentbit.io/documentation/0.12/input/tail.html) will not append more than __5MB__  into the engine until they are flushed to the Elasticsearch backend. This limit aims to provide a workaround for [backpressure](http://fluentbit.io/documentation/0.13/configuration/backpressure.html) scenarios.
-- The Kubernetes filter will enrich the logs with Kubernetes metadata, specifically _labels_ and _annotations_. The filter only goes to the API Server when it cannot find the cached info, otherwise it uses the cache.
-- The default backend in the configuration is Elasticsearch set by the [Elasticsearch Output Plugin](http://fluentbit.io/documentation/0.13/output/elasticsearch.html). It uses the Logstash format to ingest the logs. If you need a different Index and Type, please refer to the plugin option and do your own adjustments.
-- There is an option called __Retry_Limit__ set to False that means if Fluent Bit cannot flush the records to Elasticsearch it will re-try indefinitely until it succeeds.
+The loki folders also serve as [example](./loki/kustomization.yaml) of how to use Kustomize to override selected parts of the `base`'s *.conf.
 
 ## Get in touch with us!
 

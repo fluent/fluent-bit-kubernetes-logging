@@ -4,7 +4,7 @@ metadata:
   name: fluent-bit-config
   namespace: logging
   labels:
-    k8s-app: fluent-bit
+    app.kubernetes.io/name: fluent-bit
 data:
   # Configuration files: server, input, filters and output
   # ======================================================
@@ -84,7 +84,7 @@ data:
     [PARSER]
         Name   nginx
         Format regex
-        Regex ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")?$
+        Regex ^(?<remote>[^ ]*) (?<host>[^ ]*) (?<user>[^ ]*) \[(?<time>[^\]]*)\] "(?<method>\S+)(?: +(?<path>[^\"]*?)(?: +\S*)?)?" (?<code>[^ ]*) (?<size>[^ ]*)(?: "(?<referer>[^\"]*)" "(?<agent>[^\"]*)")
         Time_Key time
         Time_Format %d/%b/%Y:%H:%M:%S %z
 
