@@ -87,6 +87,20 @@ If you are using Minikube for testing purposes, use the following alternative Da
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
 ```
 
+#### Fluent Bit to OpenSearch on OpenShift4
+If you are use OpenSearch and OpenShift, user the following ConfigMap and DaemonSet.
+- For the OpenSearch, add tsl setting, as it use https default
+- For the OpenShift, add security context on daemonset, and increase buffer size to 1Mb on kuberneters filter
+```
+$ oc new-project logging
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-1.22.yaml
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-role-binding-1.22.yaml
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-openshift-security-context-constraints.yaml
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/opensearch/fluent-bit-opensearch-openshift-configmap.yaml
+$ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/opensearch/fluent-bit-ds-openshift.yaml
+```
+
 ## Details
 
 The default configuration of Fluent Bit makes sure of the following:
