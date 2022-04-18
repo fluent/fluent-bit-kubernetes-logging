@@ -91,6 +91,7 @@ $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernet
 If you are use OpenSearch and OpenShift, user the following ConfigMap and DaemonSet.
 - For the OpenSearch, add tsl setting, as it use https default
 - For the OpenShift, add security context on daemonset, and increase buffer size to 1Mb on kuberneters filter
+- Test on fluent bit 1.9.2, OpenShift 4.9, OpenSearch 1.3.1
 ```
 $ oc new-project logging
 $ oc apply -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/fluent-bit-service-account.yaml
