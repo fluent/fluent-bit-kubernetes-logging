@@ -1,6 +1,7 @@
 # Kubernetes Logging with Fluent Bit
 
-
+> This repository is no longer maintained. Please use the [charts](https://github.com/fluent/helm-charts/tree/main/charts/fluent-bit) from the [Fluent Bit Helm Chart](https://github.com/fluent/helm-charts) project.
+> If you need any further assistance, reach out to the community on the [available channels](https://fluentbit.io/community/)
 
 [Fluent Bit](http://fluentbit.io) is a lightweight and extensible __Log and Metrics Processor__ that comes with full support for Kubernetes:
 
