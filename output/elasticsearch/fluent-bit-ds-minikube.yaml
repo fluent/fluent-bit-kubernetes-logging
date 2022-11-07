@@ -33,6 +33,8 @@ spec:
           value: "elasticsearch"
         - name: FLUENT_ELASTICSEARCH_PORT
           value: "9200"
+        - name:  FLUENT_ELASTICSEARCH_TLS
+          value: "Off"
         volumeMounts:
         - name: varlog
           mountPath: /var/log

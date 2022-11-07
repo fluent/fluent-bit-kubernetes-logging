@@ -52,6 +52,7 @@ data:
         Match           *
         Host            ${FLUENT_ELASTICSEARCH_HOST}
         Port            ${FLUENT_ELASTICSEARCH_PORT}
+        tls             ${FLUENT_ELASTICSEARCH_TLS}
         Logstash_Format On
         Replace_Dots    On
         Retry_Limit     False
