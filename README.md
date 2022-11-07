@@ -83,12 +83,12 @@ Fluent Bit DaemonSet ready to be used with Kafka on a normal Kubernetes Cluster:
 $ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-ds.yaml
 ```
 
-#### Fluent Bit to Elasticsearch on Minikube
+#### Fluent Bit to Kafka on Minikube
 
 If you are using Minikube for testing purposes, use the following alternative DaemonSet manifest:
 
 ```
-$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/elasticsearch/fluent-bit-ds-minikube.yaml
+$ kubectl create -f https://raw.githubusercontent.com/fluent/fluent-bit-kubernetes-logging/master/output/kafka/fluent-bit-ds-minikube.yaml
 ```
 
 ## Details
