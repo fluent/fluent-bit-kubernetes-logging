@@ -4,8 +4,8 @@ metadata:
   name: fluent-bit
   namespace: kube-system
   labels:
-    k8s-app: fluent-bit-logging
-    version: v1
+    app.kubernetes.io/name: fluent-bit-logging
+    app.kubernetes.io/version: v1
     kubernetes.io/cluster-service: "true"
 spec:
   selector:
@@ -14,8 +14,8 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: fluent-bit-logging
-        version: v1
+        app.kubernetes.io/name: fluent-bit-logging
+        app.kubernetes.io/version: v1
         kubernetes.io/cluster-service: "true"
     spec:
       containers:
